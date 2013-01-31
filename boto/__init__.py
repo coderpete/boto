@@ -120,6 +120,19 @@ def connect_s3(aws_access_key_id=None, aws_secret_access_key=None, **kwargs):
     from boto.s3.connection import S3Connection
     return S3Connection(aws_access_key_id, aws_secret_access_key, **kwargs)
 
+def connect_dreamobjects(do_access_key_id=None, do_secret_access_key=None, **kwargs):
+    """
+    :type do_access_key_id: string
+    :param do_access_key_id: Your DreamObjects S3 Access Key ID
+
+    :type do_secret_access_key: string
+    :param do_secret_access_key: Your DreamObjects S3 Secret Access Key
+
+    :rtype: :class:`boto.s3.connection.DreamObjectsConnection`
+    :return: A connection to DreamHost's DreamObjects S3-compatible API
+    """
+    from boto.s3.connection import DreamObjectsConnection
+    return DreamObjectsConnection(do_access_key_id, do_secret_access_key, **kwargs)
 
 def connect_gs(gs_access_key_id=None, gs_secret_access_key=None, **kwargs):
     """

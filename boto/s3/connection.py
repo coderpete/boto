@@ -488,3 +488,26 @@ class S3Connection(AWSAuthConnection):
         return AWSAuthConnection.make_request(self, method, path, headers,
                 data, host, auth_path, sender,
                 override_num_retries=override_num_retries)
+
+
+class DreamObjectsConnection(S3Connection):
+    DefaultHost = 'objects.dreamhost.com'
+
+    def __init__(self, do_access_key_id=None, do_secret_access_key=None,
+                 is_secure=True, port=None, proxy=None, proxy_port=None,
+                 proxy_user=None, proxy_pass=None,
+                 host=DefaultHost, debug=0, https_connection_factory=None,
+                 calling_format=SubdomainCallingFormat(), path='/',
+                 provider='dreamhost', bucket_class=Bucket, security_token=None,
+                 suppress_consec_slashes=True, anon=False,
+                 validate_certs=None):
+        self.calling_format = calling_format
+        self.bucket_class = bucket_class
+        self.anon = anon
+        AWSAuthConnection.__init__(self, host,
+                do_access_key_id, do_secret_access_key,
+                is_secure, port, proxy, proxy_port, proxy_user, proxy_pass,
+                debug=debug, https_connection_factory=https_connection_factory,
+                path=path, provider=provider, security_token=security_token,
+                suppress_consec_slashes=suppress_consec_slashes,
+                validate_certs=validate_certs)

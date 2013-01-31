@@ -70,31 +70,37 @@ class Provider(object):
     CredentialMap = {
         'aws':    ('aws_access_key_id', 'aws_secret_access_key'),
         'google': ('gs_access_key_id',  'gs_secret_access_key'),
+        'dreamhost': ('do_access_key_id', 'do_secret_access_key'),
     }
 
     AclClassMap = {
         'aws':    Policy,
-        'google': ACL
+        'google': ACL,
+        'dreamhost': Policy,
     }
 
     CannedAclsMap = {
         'aws':    CannedS3ACLStrings,
-        'google': CannedGSACLStrings
+        'google': CannedGSACLStrings,
+        'dreamhost': CannedS3ACLStrings
     }
 
     HostKeyMap = {
         'aws':    's3',
-        'google': 'gs'
+        'google': 'gs',
+        'dreamhost': 'do'
     }
 
     ChunkedTransferSupport = {
         'aws':    False,
-        'google': True
+        'google': True,
+        'dreamhost': False
     }
 
     MetadataServiceSupport = {
         'aws': True,
-        'google': False
+        'google': False,
+        'dreamhost': True
     }
 
     # If you update this map please make sure to put "None" for the
@@ -102,6 +108,27 @@ class Provider(object):
     # than simply leaving that header out (which would cause KeyErrors).
     HeaderInfoMap = {
         'aws': {
+            HEADER_PREFIX_KEY: AWS_HEADER_PREFIX,
+            METADATA_PREFIX_KEY: AWS_HEADER_PREFIX + 'meta-',
+            ACL_HEADER_KEY: AWS_HEADER_PREFIX + 'acl',
+            AUTH_HEADER_KEY: 'AWS',
+            COPY_SOURCE_HEADER_KEY: AWS_HEADER_PREFIX + 'copy-source',
+            COPY_SOURCE_VERSION_ID_HEADER_KEY: AWS_HEADER_PREFIX +
+                                                'copy-source-version-id',
+            COPY_SOURCE_RANGE_HEADER_KEY: AWS_HEADER_PREFIX +
+                                           'copy-source-range',
+            DATE_HEADER_KEY: AWS_HEADER_PREFIX + 'date',
+            DELETE_MARKER_HEADER_KEY: AWS_HEADER_PREFIX + 'delete-marker',
+            METADATA_DIRECTIVE_HEADER_KEY: AWS_HEADER_PREFIX +
+                                            'metadata-directive',
+            RESUMABLE_UPLOAD_HEADER_KEY: None,
+            SECURITY_TOKEN_HEADER_KEY: AWS_HEADER_PREFIX + 'security-token',
+            SERVER_SIDE_ENCRYPTION_KEY: AWS_HEADER_PREFIX + 'server-side-encryption',
+            VERSION_ID_HEADER_KEY: AWS_HEADER_PREFIX + 'version-id',
+            STORAGE_CLASS_HEADER_KEY: AWS_HEADER_PREFIX + 'storage-class',
+            MFA_HEADER_KEY: AWS_HEADER_PREFIX + 'mfa',
+        },
+        'dreamhost': {
             HEADER_PREFIX_KEY: AWS_HEADER_PREFIX,
             METADATA_PREFIX_KEY: AWS_HEADER_PREFIX + 'meta-',
             ACL_HEADER_KEY: AWS_HEADER_PREFIX + 'acl',
@@ -160,6 +187,13 @@ class Provider(object):
             STORAGE_DATA_ERROR: boto.exception.GSDataError,
             STORAGE_PERMISSIONS_ERROR: boto.exception.GSPermissionsError,
             STORAGE_RESPONSE_ERROR: boto.exception.GSResponseError,
+        },
+        'dreamhost': {
+            STORAGE_COPY_ERROR: boto.exception.S3CopyError,
+            STORAGE_CREATE_ERROR: boto.exception.S3CreateError,
+            STORAGE_DATA_ERROR: boto.exception.S3DataError,
+            STORAGE_PERMISSIONS_ERROR: boto.exception.S3PermissionsError,
+            STORAGE_RESPONSE_ERROR: boto.exception.S3ResponseError,
         }
     }
 
