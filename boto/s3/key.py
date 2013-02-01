@@ -1122,6 +1122,35 @@ class Key(object):
             # return number of bytes written.
             return self.size
 
+    def set_contents_from_dirname(self, dirname, prefix='',
+                                  **kwargs):
+        """
+            Walks a directory calls set_contents_from_filename()
+            with an appropriate path.
+            Follows symbolic links.
+
+            :type dirname: string
+            :param dirname: the name of the directory you want to upload
+
+            :type prefix: string
+            :param prefix: 'path' within the bucket to which you want
+                your directory uploaded.
+
+            :type kwargs: dict
+            :param kwargs: additional parameters get passed along to
+                set_contents_from_filename.
+        """
+        if self.bucket is None:
+            return
+
+        for path,dir,files in os.walk(dirname):
+            for filename in files:
+                ospath = os.path.join(path, filename)
+                if os.path.isfile(ospath):
+                    s3path = prefix + "/" + ospath
+                    self.key = s3path
+                    self.set_contents_from_filename(ospath, **kwargs)
+
     def set_contents_from_filename(self, filename, headers=None, replace=True,
                                    cb=None, num_cb=10, policy=None, md5=None,
                                    reduced_redundancy=False,
