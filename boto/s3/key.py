@@ -1122,12 +1122,11 @@ class Key(object):
             # return number of bytes written.
             return self.size
 
-    def set_contents_from_dirname(self, dirname, prefix='',
-                                  **kwargs):
+    def set_contents_from_dirname(self, dirname, prefix='', **kwargs):
         """
             Walks a directory calls set_contents_from_filename()
             with an appropriate path.
-            Follows symbolic links.
+            Ignores symbolic links.
 
             :type dirname: string
             :param dirname: the name of the directory you want to upload
@@ -1146,6 +1145,8 @@ class Key(object):
         for path,dir,files in os.walk(dirname):
             for filename in files:
                 ospath = os.path.join(path, filename)
+                if os.path.islink(ospath):
+                    continue
                 if os.path.isfile(ospath):
                     s3path = prefix + "/" + ospath
                     self.key = s3path
